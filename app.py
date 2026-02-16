@@ -21,13 +21,13 @@ EMAIL_RE = re.compile(r"\b[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}\b")
 PHONE_RE = re.compile(r"(?<!\d)(?:\+30\s?)?(?:2\d{9}|69\d{8})(?!\d)")
 AFM_RE = re.compile(r"(?<!\d)\d{9}(?!\d)")
 AMKA_RE = re.compile(r"(?<!\d)\d{11}(?!\d)")
-ID_RE = re.compile(r"\b(?:ΑΔΤ|Α\.Δ\.Τ\.|ΔΑΤ|Αρ\.\?\s*Ταυτ\.?)\s*[:\-]?\s*[A-ZΑ-Ω]{1,3}\s?\d{5,8}\b", re.IGNORECASE)
+ID_RE = re.compile(r"\b(?:ΑΔΤ|Α\.Δ\.Τ\.|ΔΑΤ|Αρ\.?\s*Ταυτ\.?)\s*[:\-]?\s*[A-ZΑ-Ω]{1,3}\s?\d{5,8}\b", re.IGNORECASE)
 DATE_RE = re.compile(
     r"\b(?:\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}|\d{1,2}\s+(?:Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Σεπτεμβρίου|Οκτωβρίου|Νοεμβρίου|Δεκεμβρίου)\s+\d{4})\b",
     re.IGNORECASE
 )
 ADDRESS_RE = re.compile(
-    r"\b(?:Οδός|Οδ\. |Λεωφόρος|Λεωφ\. |Λ\. |Αγίου|Αγ\. |Πλατεία|Πλ\.)\s+[Α-ΩΪΫΆΈΉΊΌΎΏ][Α-Ωα-ωάέήίόύώϊϋΐΰ\.\- ]{2,40}\s+\d{1,4}\b"
+    r"\b(?:Οδός|Οδ\.|Λεωφόρος|Λεωφ\.|Λ\.|Αγίου|Αγ\.|Πλατεία|Πλ\.)\s+[Α-ΩΪΫΆΈΉΊΌΎΏ][Α-Ωα-ωάέήίόύώϊϋΐΰ\.\- ]{2,40}\s+\d{1,4}\b"
 )
 
 # Very rough Greek person name heuristic (low confidence)
@@ -72,7 +72,7 @@ TOKEN_TEMPLATES = {
     "PERSON": "[ΠΡΟΣΩΠΟ_{n}]",
 }
 
-dataclass
+@dataclass
 class Finding:
     id: str
     start: int
@@ -227,6 +227,7 @@ def render_highlighted_html(text: str, findings: List[Finding]) -> str:
     out = out.replace("\n", "<br/>")
     return f"<div style='font-family: ui-sans-serif, system-ui; line-height:1.6;'>{out}</div>"
 
+
 # -------------------------
 # Streamlit UI
 # -------------------------
@@ -246,7 +247,7 @@ with st.sidebar:
     st.caption("Το demo δουλεύει πάνω στο OCR/HTR text (όχι πάνω σε PDF).")
 
 default_text = """Στο Μονομελές Πρωτοδικείο Αθηνών, την 12/03/2024, ο Ιωάννης Παπαδόπουλος κατέθεσε ότι
-ο αντίδικος Μαρί�� Κωνσταντίνου (ΑΦΜ 123456789) κατοικεί Οδός Πατησίων 120.
+ο αντίδικος Μαρία Κωνσταντίνου (ΑΦΜ 123456789) κατοικεί Οδός Πατησίων 120.
 Email: test.user@example.com, Τηλέφωνο: +30 6971234567.
 ΑΔΤ: ΑΒ 123456.
 """
@@ -298,7 +299,6 @@ for f in findings:
         "status": f.status,
         "edited": f.edited
     })
-
 
 df = pd.DataFrame(rows)
 
